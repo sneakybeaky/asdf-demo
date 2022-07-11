@@ -85,7 +85,7 @@ install_tool_plugins
 asdf install
 direnv reload
 
-# Invoke direnv allow using an old trick I remember (I wonder if this works on MacOS?)
+# Invoke `direnv allow .` interactively
 echo "We need to run direnv allow . once to make this configuration valid."
 interactive_exec "direnv allow ."
 echo "Done..."
