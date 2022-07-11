@@ -48,8 +48,15 @@ asdf_install_check() {
 	if [ "$path" == "" ]; then
 		echo "Will execute: $INSTALL_CMD"
 		$INSTALL_CMD $ASDF_INSTALL_PKG
-		echo ". /opt/asdf-vm/asdf.sh" >> ~/.zshrc
-		. "/opt/asdf-vm/asdf.sh"
+		if [ "${OS}" == "Linux" ]; then
+			echo ". /opt/asdf-vm/asdf.sh" >> ~/.zshrc
+			. "/opt/asdf-vm/asdf.sh"
+		fi
+		if [ "$OS" == "Darwin" ]; then
+			asdf_path="$(brew --prefix asdf)/libexec/asdf.sh"
+			echo -e "\n. ${asdf_path}" >> ${ZDOTDIR:-~}/.zshrc
+			. ${asdf_path}
+		fi
 	else
 		echo "asdf already installed"
 	fi
