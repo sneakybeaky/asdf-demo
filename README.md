@@ -68,7 +68,7 @@ $ hey https://www.bbc.co.uk
 And when you leave that directory the changes to your environment are undone
 
 #### Running tools from IDEs / elsewhere
-If you want to run the exact same tools as you've set up from other locations / programs you can use the `asdf exec` command. For example
+If you want to run the exact same tools as you've set up from other locations / programs you can use the `direnv exec` command. For example
 
 ```shell
 $ cd $HOME
