@@ -1,32 +1,27 @@
 ## ASDF & direnv demo
 
-### Setup
-
-Install [asdf](https://asdf-vm.com/guide/getting-started.html) core.
-
-Install the [asdf-direnv plugin](https://github.com/asdf-community/asdf-direnv#setup).
-
-## The demo
 
 ### Per project tooling
 
-The `go` directory has the `.envrc` and `.tool-versions` files in place to use a specific version of `golang` and `golangci-lint`
+The `go` directory has the `.envrc` and `.tool-versions` files in place to use a specific version of `golang` and `golangci-lint`. 
 
-For the very first time you use this directory you will need to allow `direnv` to run and install the asdf plugins you're missing. `asdf` will tell you which ones these are 
+To install `asdf` and `direnv` use the `setup-tools` make target
+```shell
+$ cd go 
+$ make setup-tools
+```
+
+Every time a `.envrc` file is modified you must explicitly allow it to run. This is to avoid security issues from a sneaky modification
 
 ```shell
 $ cd go
 direnv: error <path>/asdf-demo/go/.envrc is blocked. Run `direnv allow` to approve its content
 $ direnv allow
-$ asdf install
-golangci-lint plugin is not installed
-golang plugin is not installed
 ```
 
-Install the plugins and then run install to install the tools defined in `.tool-versions`
+Now you will need to install the `asdf` plugins (the helpers for each tool that know how to fetch & install versions) and specific tool versions specified in `.tool-versions`
+
 ```shell
-$ asdf plugin add golangci-lint
-$ asdf plugin add golang
 $ asdf install
 $ direnv reload
 ```
