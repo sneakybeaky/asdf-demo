@@ -54,7 +54,7 @@ asdf_install_check() {
 		fi
 		if [ "$OS" == "Darwin" ]; then
 			asdf_path="$(brew --prefix asdf)/libexec/asdf.sh"
-			echo -e "\n. ${asdf_path}" >> ${ZDOTDIR:-~}/.zshrc
+			echo "\n. ${asdf_path}" >> ${ZDOTDIR:-~}/.zshrc
 			. ${asdf_path}
 		fi
 	else
@@ -68,10 +68,12 @@ direnv_install() {
 }
 
 install_tool_plugins() {
-	while IFS="\n" read -r dependency 
+	while IFS="\n" read -r plugin
 	do
-		if [ "$dependency" != "" ]; then
-			asdf plugin add $dependency
+		plugin=$(echo $plugin | cut -d' ' -f1)
+		if [ "$plugin" != "" ]; then
+			echo "adding plugin $plugin"
+			asdf plugin add $plugin
 		fi
 	done < .tool-versions
 }
@@ -96,6 +98,3 @@ direnv reload
 echo "We need to run direnv allow . once to make this configuration valid."
 interactive_exec "direnv allow ."
 echo "Done..."
-
-
-
