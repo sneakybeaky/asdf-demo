@@ -1,5 +1,8 @@
-.asdf_ok: .tool-versions .envrc
-	./script/asdf_bootstrap.sh && touch .asdf_ok
+.setup_ok: .tool-versions .envrc
+	@script/setup.sh && touch .setup_ok
 	
-setup-tools: .asdf_ok
+setup: .setup_ok
 	@echo "System is setup"
+
+install:
+	@script/install-tools.sh
