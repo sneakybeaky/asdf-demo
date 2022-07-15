@@ -106,5 +106,3 @@ $ROOT_DIR/script/install-tools.sh
 _log_info "We need to run direnv allow . once to make this configuration valid."
 interactive_exec "direnv allow ."
 _log_info "Done..."
-
-_reload_shell

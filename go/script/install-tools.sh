@@ -29,7 +29,6 @@ install_asdf_plugins() {
 install_tools() {
 	add_asdf_plugins
 	install_asdf_plugins
-	_reload_shell
 }
 
 install_tools

@@ -30,9 +30,4 @@ _backup_file() {
 	fi
 }
 
-_reload_shell() {
-	_log_info "Reloading your shell, though if you see problems you might have to manually do it"
-	exec $SHELL
-}
-
 os_name

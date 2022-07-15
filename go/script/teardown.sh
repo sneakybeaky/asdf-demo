@@ -58,7 +58,6 @@ cleanup_zshrc() {
 		sed -i '' "/.*asdf.*/d" "${backup}_2"
 		cp "${backup}_2" ${home_zshrc}
 	fi
-	_reload_shell
 }
 
 teardown() {
