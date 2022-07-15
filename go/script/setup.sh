@@ -99,10 +99,7 @@ install_asdf
 # Add direnv, bootstrap for zsh
 install_direnv
 
-# Read the plugins from .tool-versions, and tell asdf to add them ... (TODO: git-repos etc?)
-add_asdf_plugins
-
-# Install specified versions from .tool-versions, and reload direnv
+# Add & install specified plugins from .tool-versions, and reload direnv
 $ROOT_DIR/script/install-tools.sh
 
 # Invoke `direnv allow .` interactively
@@ -110,5 +107,4 @@ _log_info "We need to run direnv allow . once to make this configuration valid."
 interactive_exec "direnv allow ."
 _log_info "Done..."
 
-_log_info "Reloading your shell, though if you see problems you might have to manually do it"
-exec $SHELL
+_reload_shell

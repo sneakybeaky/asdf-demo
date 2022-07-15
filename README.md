@@ -5,10 +5,16 @@
 
 The `go` directory has the `.envrc` and `.tool-versions` files in place to use a specific version of `golang` and `golangci-lint`. 
 
-To install `asdf` and `direnv` use the `setup-tools` make target
+To install `asdf` all tools defined in `.tool-versions`:
 ```shell
 $ cd go 
-$ make setup-tools
+$ make setup
+```
+
+To uninstall `asdf` and reset your env:
+```shell
+$ cd go
+$ make teardown
 ```
 
 Every time a `.envrc` file is modified you must explicitly allow it to run. This is to avoid security issues from a sneaky modification
@@ -19,11 +25,10 @@ direnv: error <path>/asdf-demo/go/.envrc is blocked. Run `direnv allow` to appro
 $ direnv allow
 ```
 
-Now you will need to install the `asdf` plugins (the helpers for each tool that know how to fetch & install versions) and specific tool versions specified in `.tool-versions`
+If you change the list of `asdf` plugins (the helpers for each tool that know how to fetch & install versions) and specific tool versions specified in `.tool-versions`
 
 ```shell
-$ asdf install
-$ direnv reload
+$ make install
 ```
 
 Now you should have the versions in your path 
