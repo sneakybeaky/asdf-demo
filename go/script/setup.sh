@@ -9,8 +9,10 @@
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)/.."
 
+source "$ROOT_DIR/script/shared.sh"
+
 init_os_vars() {
-	OS=`uname -s`
+	home_zshrc="${HOME}/.zshrc"
 	case "$OS" in
 		"Darwin")
 			INSTALL_CMD="brew install"
@@ -19,7 +21,7 @@ init_os_vars() {
 		"Linux")
 			ASDF_INSTALL_PKG="asdf-vm"
 			. "/etc/lsb-release"
-			echo "Distro is ${DISTRIB_ID} ($DISTRIB_RELEASE)"
+			_log_info "Distro is ${DISTRIB_ID} ($DISTRIB_RELEASE)"
 			case "$DISTRIB_ID" in
 				"Ubuntu") 	INSTALL_CMD="sudo apt install"
 						;;
@@ -27,7 +29,7 @@ init_os_vars() {
 						;;
 				"ManjaroLinux") INSTALL_CMD="pamac install"
 						;;
-				"*")		echo "Unknown Linux OS"
+				"*")		_log_error "Unknown Linux OS"
 						exit 1
 						;;
 			esac
@@ -47,10 +49,17 @@ interactive_Linux() {
 	script --return -c "$1" /dev/null # GNU script installed by default
 }
 
+setup_zshrc() {
+	if ( ! $(cat ${home_zshrc} |grep "source ${asdf_path}" > /dev/null) ); then
+		_backup_file ${home_zshrc}
+		echo "\n# InDebted auto-generated\nsource ${asdf_path}" >> ${home_zshrc}
+	fi
+}
+
 install_asdf() {
 	path=`command -v "asdf"`
 	if [ "$path" == "" ]; then
-		echo "Executing: $INSTALL_CMD"
+		_log_info "Executing: $INSTALL_CMD $ASDF_INSTALL_PKG"
 		$INSTALL_CMD $ASDF_INSTALL_PKG
 		if [ "${OS}" == "Linux" ]; then
 			asdf_path="/opt/asdf-vm/asdf.sh"
@@ -58,10 +67,10 @@ install_asdf() {
 		if [ "$OS" == "Darwin" ]; then
 			asdf_path="$(brew --prefix asdf)/libexec/asdf.sh"
 		fi
-		echo "\n#InDebted auto-generated\nsource ${asdf_path}" >> ${HOME}/.zshrc
+		setup_zshrc
 		source "${asdf_path}"
 	else
-		echo "asdf already installed"
+		_log_info "asdf already installed"
 	fi
 }
 
@@ -75,7 +84,7 @@ add_asdf_plugins() {
 	do
 		plugin=$(echo $plugin | cut -d' ' -f1)
 		if [ "$plugin" != "" ]; then
-			echo "adding plugin $plugin"
+			_log_info "adding plugin $plugin"
 			asdf plugin add $plugin
 		fi
 	done < .tool-versions
@@ -97,6 +106,9 @@ add_asdf_plugins
 $ROOT_DIR/script/install-tools.sh
 
 # Invoke `direnv allow .` interactively
-echo "We need to run direnv allow . once to make this configuration valid."
+_log_info "We need to run direnv allow . once to make this configuration valid."
 interactive_exec "direnv allow ."
-echo "Done..."
+_log_info "Done..."
+
+_log_info "Reloading your shell, though if you see problems you might have to manually do it"
+exec $SHELL

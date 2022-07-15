@@ -6,3 +6,6 @@ setup: .setup_ok
 
 install:
 	@script/install-tools.sh
+
+teardown:
+	@script/teardown.sh

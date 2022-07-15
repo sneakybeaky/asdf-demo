@@ -1,5 +1,5 @@
 #/bin/zsh
-set -ex -o pipefail
+set -o pipefail
 
 install_tools() {
 	OS=`uname -s`
