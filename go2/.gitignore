@@ -1,0 +1,9 @@
+# Macos
+.DS_Store
+
+# Env vars
+.env.override
+
+# Editors
+.idea/
+.vscode/
