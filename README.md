@@ -85,7 +85,7 @@ More useful [pro-tips](https://github.com/asdf-community/asdf-direnv#pro-tips)
 
 ## `go2`
 
-The `go2` folder is just a small update on the `go` folder contents.
+The `go2` folder is just a small update on the `go` folder contents. The `install` script and the root's `.tool-versions` are two files that would be dropped into a project and run using a project's `Makefile` or called directly.
 
 I would like feedback on these changes to the `go` folder.
 
