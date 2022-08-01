@@ -82,3 +82,15 @@ $ direnv exec <path to checkout>/asdf-demo/go golangci-lint version
 
 ### Further reading
 More useful [pro-tips](https://github.com/asdf-community/asdf-direnv#pro-tips) 
+
+## `go2`
+
+The `go2` folder is just a small update on the `go` folder contents.
+
+I would like feedback on these changes to the `go` folder.
+
+## `workstation-setup`
+
+The `workstation-setup` folder is what I'm proposing as a standalone repo that engineers can use to install and setup `oh-my-zsh`, `direnv`, `asdf` and `aws`. I omitted the `aws` templates from this repo since this repo is public right now. But maybe there's a separate repo for pulling in `aws` configuration details.
+
+I would like feedback on thoughts around the usefulness of a `workstation-setup` repo and if there are any improvements to make.
