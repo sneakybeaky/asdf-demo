@@ -18,9 +18,9 @@ function check_requirements() {
   elif [[ -z "$(command -v asdf)" ]]; then
     echo "Please install 'asdf' before running this script"
     exit 1
-  # elif [[ -z "$(command -v direnv)" ]]; then
-  #   echo "Please install 'direnv' before running this script"
-  #   exit 1
+  elif [[ -z "$(command -v direnv)" ]]; then
+    echo "Please install 'direnv' before running this script"
+    exit 1
   fi
 }
 

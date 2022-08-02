@@ -104,14 +104,15 @@ function install_macos_dependencies() {
 }
 
 function install_asdf() {	
-  ASDF_PATH="$(brew --prefix asdf)/libexec/asdf.sh"
+  ASDF_PATH="\$(brew --prefix asdf)/libexec/asdf.sh"
 
   if ( ! $(cat $HOME/.zshrc |grep "source ${ASDF_PATH}" > /dev/null) ); then
     _backup_file "$HOME/.zshrc"
+    
     echo -e "\n# InDebted auto-generated\nsource ${ASDF_PATH}" >> $HOME/.zshrc
   fi
 
-  source "${ASDF_PATH}"
+  source $(brew --prefix asdf)/libexec/asdf.sh
 }
 
 function install_oh_my_zsh() {
