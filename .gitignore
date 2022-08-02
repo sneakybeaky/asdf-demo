@@ -1,2 +1,9 @@
 .idea
 .setup_ok
+
+# Editors
+.vscode/
+.idea/
+
+# Macos
+.DS_Store

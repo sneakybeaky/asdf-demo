@@ -12,9 +12,15 @@ function check_requirements() {
   if [[ ! -f "$ROOT_DIR/.tool-versions" ]]; then
     echo "Please add a '.tool-versions' file to the root of the project before running this script"
     exit 1
+  elif [[ ! -f "$ROOT_DIR/.envrc" ]]; then
+    echo "Please add a '.envrc' file to the root of the project before running this script"
+    exit 1
   elif [[ -z "$(command -v asdf)" ]]; then
     echo "Please install 'asdf' before running this script"
     exit 1
+  # elif [[ -z "$(command -v direnv)" ]]; then
+  #   echo "Please install 'direnv' before running this script"
+  #   exit 1
   fi
 }
 
@@ -28,21 +34,6 @@ function _log_info() {
 
 function _log_error() {
   echo "${COLOR_RED}${@}${COLOR_NONE}"
-}
-
-function _backup_file() {
-  now=$(date +'%Y-%m-%d-%H-%M-%S')
-
-  mkdir -p ${HOME}/.onboarding
-
-  original=$1
-  filename=$(basename $original)
-
-  if [ -f $original ]; then
-    backup="${HOME}/.onboarding/$filename-$now"
-    cp "$original" "$backup"
-    _log_info "Backed up original $original to $backup";
-  fi
 }
 
 function add_asdf_plugins() {
@@ -70,7 +61,20 @@ function install_asdf_plugins() {
     OVERWRITE_ARCH=amd64
   fi
 
-  ASDF_HASHICORP_OVERWRITE_ARCH=$OVERWRITE_ARCH asdf install
+  while IFS="\n" read -r plugin
+  do
+    plugin=$(echo $plugin | cut -d' ' -f1)
+
+    if [ "$plugin" != "" ]; then
+      if [[ -z "$(command -v $plugin)" ]]; then
+        _log_info "Installing asdf plugin $plugin"
+        ASDF_HASHICORP_OVERWRITE_ARCH=$OVERWRITE_ARCH asdf install $plugin
+      else
+        echo "Plugin '$plugin' is already installed"
+      fi
+    fi
+  done < "${ROOT_DIR}/.tool-versions"
+
   direnv reload
 }
 

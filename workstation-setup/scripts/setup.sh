@@ -18,6 +18,31 @@ function check_requirements() {
   fi 
 }
 
+function _log_info() {
+  echo "${COLOR_DARK_GRAY}${@}${COLOR_NONE}"
+}
+
+function _log_error() {
+  echo "${COLOR_RED}${@}${COLOR_NONE}"
+}
+
+function _backup_file() {
+  now=$(date +'%Y-%m-%d-%H-%M-%S')
+
+  mkdir -p ${HOME}/.onboarding
+
+  original=$1
+  filename=$(basename $original)
+
+  if [ -f "$original" ]; then
+    backup="${HOME}/.onboarding/$filename-$now"
+    
+    cp "$original" "$backup"
+    
+    _log_info "Backed up original $original to $backup";
+  fi
+}
+
 function install_homebrew() {
   BREW_PATH=/usr/local/bin
   if [[ "$(uname -m)" = "arm64" ]]; then
@@ -70,12 +95,23 @@ function install_macos_dependencies() {
 
   install_brew_package "awscli" "aws"
 
-  PROGRAMS=(asdf direnv curl jq yarn postgresql pre-commit tfenv terraform-docs)
+  PROGRAMS=(asdf curl jq yarn postgresql pre-commit tfenv terraform-docs)
   for program in "${PROGRAMS[@]}"; do
     install_brew_package "$program"
   done
 
   install_brew_package "aws-vault" "aws-vault" "true"
+}
+
+function install_asdf() {	
+  ASDF_PATH="$(brew --prefix asdf)/libexec/asdf.sh"
+
+  if ( ! $(cat $HOME/.zshrc |grep "source ${ASDF_PATH}" > /dev/null) ); then
+    _backup_file "$HOME/.zshrc"
+    echo -e "\n# InDebted auto-generated\nsource ${ASDF_PATH}" >> $HOME/.zshrc
+  fi
+
+  source "${ASDF_PATH}"
 }
 
 function install_oh_my_zsh() {
@@ -85,17 +121,6 @@ function install_oh_my_zsh() {
 
   if [[ ! -f "$HOME/.zshrc" ]]; then
     touch "$HOME/.zshrc"
-  fi
-}
-
-function setup_direnv() {
-  if [[ -z "$(command -v direnv)" ]]; then
-    echo "Please install 'direnv' before running this script"
-    exit 1
-  fi
-
-  if ( ! $(cat $HOME/.zshrc | grep 'eval "$(direnv hook zsh)"' > /dev/null) ); then
-    echo 'eval "$(direnv hook zsh)"' >> $HOME/.zshrc
   fi
 }
 
@@ -149,6 +174,13 @@ function setup_aws() {
   setup_aws_zsh
 }
 
+function install_direnv() {
+  if [[ -z "$(command -v direnv)" ]]; then
+	  asdf plugin add direnv || true
+	  asdf direnv setup --shell zsh --version latest
+  fi
+}
+
 function main() {
   check_requirements
 
@@ -163,13 +195,15 @@ function main() {
     mkdir -p "$HOME/.onboarding"
   fi
 
-  setup_git
+  install_asdf
+
+  install_direnv
 
   install_oh_my_zsh
 
-  setup_direnv
-
   setup_aws
+
+  setup_git
 }
 
 main

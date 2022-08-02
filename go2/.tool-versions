@@ -1,4 +1,3 @@
 direnv 2.32.1
-golang 1.18
+golang 1.18.1
 golangci-lint 1.46.1
-terraform 0.12.31
